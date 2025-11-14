@@ -1,0 +1,36 @@
+.contact {
+  text-align: center;
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 4rem 2rem;
+}
+
+.contact p {
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  font-size: 1.1rem;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.contact-link {
+  padding: 0.8rem 1.5rem;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: border-color 0.3s, color 0.3s;
+  font-weight: 500;
+}
+
+.contact-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
