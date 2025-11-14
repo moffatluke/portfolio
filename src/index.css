@@ -1,10 +1,57 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import "tailwindcss";
+
+@theme {
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(9% 0 0);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(9% 0 0);
+  --color-popover: oklch(100% 0 0);
+  --color-popover-foreground: oklch(9% 0 0);
+  --color-primary: oklch(9% 0 0);
+  --color-primary-foreground: oklch(98% 0 0);
+  --color-secondary: oklch(96.1% 0 0);
+  --color-secondary-foreground: oklch(9% 0 0);
+  --color-muted: oklch(96.1% 0 0);
+  --color-muted-foreground: oklch(45.1% 0 0);
+  --color-accent: oklch(96.1% 0 0);
+  --color-accent-foreground: oklch(9% 0 0);
+  --color-destructive: oklch(60.2% 0.22 29);
+  --color-destructive-foreground: oklch(98% 0 0);
+  --color-border: oklch(89.8% 0 0);
+  --color-input: oklch(89.8% 0 0);
+  --color-ring: oklch(9% 0 0);
+  
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-background: oklch(9% 0 0);
+    --color-foreground: oklch(98% 0 0);
+    --color-card: oklch(9% 0 0);
+    --color-card-foreground: oklch(98% 0 0);
+    --color-popover: oklch(9% 0 0);
+    --color-popover-foreground: oklch(98% 0 0);
+    --color-primary: oklch(98% 0 0);
+    --color-primary-foreground: oklch(9% 0 0);
+    --color-secondary: oklch(14.9% 0 0);
+    --color-secondary-foreground: oklch(98% 0 0);
+    --color-muted: oklch(14.9% 0 0);
+    --color-muted-foreground: oklch(63.9% 0 0);
+    --color-accent: oklch(14.9% 0 0);
+    --color-accent-foreground: oklch(98% 0 0);
+    --color-destructive: oklch(30.6% 0.16 29);
+    --color-destructive-foreground: oklch(98% 0 0);
+    --color-border: oklch(14.9% 0 0);
+    --color-input: oklch(14.9% 0 0);
+    --color-ring: oklch(83.1% 0 0);
+  }
 }
 
 :root {
+  /* Legacy variables for existing components */
   --bg-primary: #0a0a0a;
   --bg-secondary: #1a1a1a;
   --bg-card: #252525;
@@ -12,33 +59,14 @@
   --text-secondary: #a0a0a0;
   --accent: #3b82f6;
   --accent-hover: #2563eb;
-  --border: #333;
-  
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.6;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  border-color: var(--color-border);
 }
 
 body {
-  margin: 0;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  min-width: 320px;
-}
-
-a {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-a:hover {
-  color: var(--accent-hover);
-}
-
-#root {
-  width: 100%;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
