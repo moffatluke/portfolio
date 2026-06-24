@@ -1,0 +1,36 @@
+import ConstellationBg from './components/ConstellationBg'
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import About from './components/About'
+import Skills from './components/Skills'
+import Projects from './components/Projects'
+import Contact from './components/Contact'
+import { useScrollReveal } from './hooks/useScrollReveal'
+
+function App() {
+  useScrollReveal()
+
+  return (
+    <>
+      <ConstellationBg />
+      <Navbar />
+      <main>
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
+      </main>
+      <footer className="footer">
+        <p>© 2026 Luke Moffat</p>
+        <p>
+          <a href="https://github.com/moffatluke" target="_blank" rel="noopener noreferrer">
+            github.com/moffatluke
+          </a>
+        </p>
+      </footer>
+    </>
+  )
+}
+
+export default App
