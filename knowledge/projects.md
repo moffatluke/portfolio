@@ -1,5 +1,10 @@
 # Projects
 
+Luke has built and shipped a range of full-stack and AI projects. His main
+projects are the Startup Idea Validator, the Cowork Student Toolkit, the Finance
+Dashboard, the Obsidian Dev Tracker, and the Note Taker. Each one is described
+below, including what it does and what it was built with.
+
 ## Startup Idea Validator
 An AI-powered web app that turns a rough startup idea into an investor-style
 breakdown in seconds: problem validation, market assessment, competitors, key

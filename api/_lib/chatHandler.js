@@ -5,7 +5,7 @@ import { checkAndRecord } from './rateLimit.js'
 import { buildSystemPrompt, buildContents } from './prompt.js'
 
 const MAX_MESSAGE_LEN = 1000
-const MATCH_COUNT = 5
+const MATCH_COUNT = 8
 const LIMITS = { perMinute: 8, perDay: 40 }
 
 // Core RAG logic shared by the Vercel function and the Vite dev shim.

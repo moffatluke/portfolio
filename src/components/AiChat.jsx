@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 const INTRO = "Hi, I'm Luke's AI. Ask me anything about his projects, skills, or what he's looking for, and I'll answer on his behalf."
 const SUGGESTIONS = ["What's he best at?", 'Is he open to internships?', 'Tell me about a project']
@@ -60,7 +61,19 @@ export default function AiChat() {
       <div className="ai-chat-thread" ref={threadRef} aria-live="polite">
         {messages.map((m, i) => (
           <div key={i} className={`ai-msg ai-msg-${m.role}`}>
-            <p>{m.text}</p>
+            {m.role === 'bot' ? (
+              <div className="ai-md">
+                <ReactMarkdown
+                  components={{
+                    a: (props) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+                  }}
+                >
+                  {m.text}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <p>{m.text}</p>
+            )}
           </div>
         ))}
         {busy && (
