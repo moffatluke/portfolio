@@ -319,6 +319,11 @@ section h2 {
 .form-submit:hover { background-color: var(--accent-bright); }
 .form-submit:active { transform: translateY(1px); }
 .form-submit:disabled { opacity: 0.55; cursor: default; }
+.contact-form-error {
+  margin: 0; padding: 0.7rem 0.9rem; font-size: var(--text-sm); line-height: 1.45;
+  color: oklch(0.55 0.18 25); background-color: oklch(0.95 0.04 25);
+  border: 1px solid oklch(0.85 0.08 25); border-radius: 8px;
+}
 .contact-links { display: flex; gap: 2rem; margin-top: 0.75rem; }
 .contact-links a { color: var(--ink-soft); text-decoration: none; font-weight: 600; font-size: var(--text-sm); transition: color 0.2s; }
 .contact-links a:hover { color: var(--accent); }

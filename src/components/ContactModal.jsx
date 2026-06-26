@@ -4,6 +4,8 @@ export default function ContactModal({ open, onClose }) {
   const dialogRef = useRef(null)
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [done, setDone] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
 
   // Sync the native <dialog> with the `open` prop.
   useEffect(() => {
@@ -18,6 +20,8 @@ export default function ContactModal({ open, onClose }) {
     if (!open) {
       const t = setTimeout(() => {
         setDone(false)
+        setError('')
+        setSending(false)
         setForm({ name: '', email: '', message: '' })
       }, 200)
       return () => clearTimeout(t)
@@ -26,11 +30,30 @@ export default function ContactModal({ open, onClose }) {
 
   const update = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
-    // Task 8 wires this to POST /api/contact (save to Supabase + email via Resend).
-    setDone(true)
-    setTimeout(onClose, 2200)
+    if (sending) return
+    setSending(true)
+    setError('')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong. Please try again.')
+        setSending(false)
+        return
+      }
+      setDone(true)
+      setSending(false)
+      setTimeout(onClose, 2200)
+    } catch {
+      setError("Couldn't send right now. Please check your connection and try again.")
+      setSending(false)
+    }
   }
 
   return (
@@ -68,7 +91,10 @@ export default function ContactModal({ open, onClose }) {
                 <label htmlFor="message">Message</label>
                 <textarea id="message" name="message" rows="5" placeholder="Tell me about the role or project…" value={form.message} onChange={update} required />
               </div>
-              <button type="submit" className="form-submit">Send message</button>
+              {error && <p className="contact-form-error" role="alert">{error}</p>}
+              <button type="submit" className="form-submit" disabled={sending}>
+                {sending ? 'Sending…' : 'Send message'}
+              </button>
             </form>
           </>
         )}
