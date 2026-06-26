@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Privacy Policy — Luke Moffat</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root {
+        --bg: #fbfbfc; --surface: #ffffff; --ink: #1a1d21; --ink-soft: #4a4f57;
+        --accent: #027e47; --border: #e6e8eb;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #14171a; --surface: #1c2024; --ink: #f0f2f4; --ink-soft: #b3b8bf;
+          --accent: #2bb673; --border: #2a2f35;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--bg); color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.7; font-size: 16px;
+      }
+      main { max-width: 720px; margin: 0 auto; padding: 3.5rem 1.5rem 5rem; }
+      a { color: var(--accent); }
+      a.back { display: inline-block; margin-bottom: 2rem; font-size: 0.95rem; text-decoration: none; }
+      a.back:hover { text-decoration: underline; }
+      h1 { font-size: 2rem; margin: 0 0 0.4rem; letter-spacing: -0.02em; }
+      h2 { font-size: 1.2rem; margin: 2.5rem 0 0.6rem; letter-spacing: -0.01em; }
+      p, li { color: var(--ink-soft); }
+      .meta { color: var(--ink-soft); font-size: 0.95rem; margin: 0 0 2rem; }
+      ul { padding-left: 1.25rem; }
+      li { margin: 0.4rem 0; }
+      table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1rem; font-size: 0.95rem; }
+      th, td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+      th { color: var(--ink); font-weight: 600; }
+      strong { color: var(--ink); }
+      footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.9rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a class="back" href="/">← Back to portfolio</a>
+      <h1>Privacy Policy</h1>
+      <p class="meta">Last updated: June 26, 2026</p>
+
+      <p>
+        This site is the personal portfolio of Luke Moffat. I respect your privacy and keep
+        data collection to the minimum needed to run the site. This page explains what
+        information is collected, why, who it's shared with, and how to have it removed.
+      </p>
+
+      <h2>Information I collect</h2>
+      <table>
+        <tr><th>What</th><th>When &amp; why</th></tr>
+        <tr>
+          <td><strong>Name, email, and message</strong></td>
+          <td>Only if you use the contact form, so I can read your message and reply.</td>
+        </tr>
+        <tr>
+          <td><strong>Your chat questions</strong></td>
+          <td>When you use the AI chat, your question is sent to Google's Gemini API to generate a reply. Chat conversations are <strong>not</strong> stored in my database.</td>
+        </tr>
+        <tr>
+          <td><strong>A hashed value of your IP address</strong></td>
+          <td>For every chat or contact request, to prevent spam and abuse. I store a one-way <strong>hash</strong> of your IP, never the actual address.</td>
+        </tr>
+      </table>
+
+      <h2>What I don't do</h2>
+      <ul>
+        <li>I do <strong>not</strong> store your real IP address — only a one-way hash used for rate limiting.</li>
+        <li>I do <strong>not</strong> use advertising or tracking cookies.</li>
+        <li>I do <strong>not</strong> sell, rent, or trade your information to anyone.</li>
+        <li>I do <strong>not</strong> save the contents of AI chat conversations.</li>
+      </ul>
+
+      <h2>Services I rely on</h2>
+      <p>To run the site I use a few trusted third-party services, which process data only to provide their function:</p>
+      <ul>
+        <li><strong>Vercel</strong> — website hosting (and privacy-friendly, cookieless analytics if enabled).</li>
+        <li><strong>Supabase</strong> — database that stores contact-form messages and hashed rate-limit values.</li>
+        <li><strong>Resend</strong> — delivers contact-form submissions to my email.</li>
+        <li><strong>Google (Gemini API)</strong> — generates AI chat responses from your questions.</li>
+      </ul>
+
+      <h2>How long I keep it</h2>
+      <p>
+        Contact-form messages are kept until I no longer need them or you ask me to delete them.
+        Hashed rate-limit values contain no personal information and are retained only as needed
+        to keep the site secure.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        You can ask me what information I hold about you, or ask me to delete it, at any time —
+        just email me and I'll take care of it. Because contact messages are tied to the email
+        you provided, I can find and remove them on request.
+      </p>
+
+      <h2>Children's privacy</h2>
+      <p>This site is not directed at children under 13, and I do not knowingly collect their information.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        If I change how the site handles data, I'll update this page and the "last updated" date
+        above.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions, or want your data removed? Use the
+        <a href="/#contact">contact form</a> on the homepage (the "Send a message" button)
+        and I'll take care of it.
+      </p>
+
+      <footer>
+        © 2026 Luke Moffat. This policy describes the actual data practices of this site.
+      </footer>
+    </main>
+  </body>
+</html>

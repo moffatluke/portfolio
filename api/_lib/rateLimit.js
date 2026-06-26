@@ -1,3 +1,13 @@
+import { createHmac } from 'node:crypto'
+
+// One-way hash of an IP so we never store the raw address. Keyed (HMAC) with a
+// server-side secret so the hashes can't be reversed with a lookup table of all
+// IPs. Same IP always maps to the same hash, so rate limiting still works.
+export function hashIp(ip) {
+  const pepper = process.env.SUPABASE_SERVICE_ROLE_KEY || 'local-dev-pepper'
+  return createHmac('sha256', pepper).update(String(ip)).digest('hex')
+}
+
 // Pure decision: is this request allowed given recent counts?
 export function evaluateLimit({ minuteCount, dayCount }, { perMinute, perDay }) {
   if (minuteCount >= perMinute) return { allowed: false, reason: 'minute' }
@@ -7,6 +17,7 @@ export function evaluateLimit({ minuteCount, dayCount }, { perMinute, perDay }) 
 
 // Counts this IP's recent requests, evaluates, and records when allowed.
 export async function checkAndRecord(supabase, ip, { perMinute, perDay }) {
+  const ipHash = hashIp(ip)
   const now = Date.now()
   const minuteAgo = new Date(now - 60_000).toISOString()
   const dayAgo = new Date(now - 86_400_000).toISOString()
@@ -14,13 +25,13 @@ export async function checkAndRecord(supabase, ip, { perMinute, perDay }) {
   const minute = await supabase
     .from('rate_limits')
     .select('*', { count: 'exact', head: true })
-    .eq('ip', ip)
+    .eq('ip', ipHash)
     .gte('created_at', minuteAgo)
 
   const day = await supabase
     .from('rate_limits')
     .select('*', { count: 'exact', head: true })
-    .eq('ip', ip)
+    .eq('ip', ipHash)
     .gte('created_at', dayAgo)
 
   const decision = evaluateLimit(
@@ -29,7 +40,7 @@ export async function checkAndRecord(supabase, ip, { perMinute, perDay }) {
   )
 
   if (decision.allowed) {
-    await supabase.from('rate_limits').insert({ ip })
+    await supabase.from('rate_limits').insert({ ip: ipHash })
   }
   return decision
 }

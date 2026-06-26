@@ -14,7 +14,8 @@ create table if not exists documents (
 create index if not exists documents_embedding_hnsw
   on documents using hnsw (embedding vector_cosine_ops);
 
--- Per-IP rate limiting
+-- Per-IP rate limiting. The `ip` column stores an HMAC-SHA256 hash of the
+-- address (see api/_lib/rateLimit.js), never the raw IP.
 create table if not exists rate_limits (
   id bigint generated always as identity primary key,
   ip text not null,

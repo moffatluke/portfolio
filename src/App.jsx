@@ -24,6 +24,8 @@ function App() {
       <footer className="footer">
         <p>© 2026 Luke Moffat</p>
         <p>
+          <a href="/privacy.html">Privacy</a>
+          <span aria-hidden="true" style={{ margin: '0 0.6rem', opacity: 0.5 }}>·</span>
           <a href="https://github.com/moffatluke" target="_blank" rel="noopener noreferrer">
             github.com/moffatluke
           </a>
