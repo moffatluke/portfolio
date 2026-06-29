@@ -26,4 +26,12 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // Node-context files (serverless API, build config, tests) use process,
+    // __dirname, etc. — give them Node globals on top of the browser set.
+    files: ['api/**/*.js', 'tests/**/*.js', 'vite.config.js', '*.config.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ])
