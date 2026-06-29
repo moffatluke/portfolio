@@ -1,4 +1,5 @@
-import lukeCutout from '../assets/luke-cutout-nobg.png'
+import GithubHeatmap from './GithubHeatmap'
+import PreviewLink from './PreviewLink'
 
 export default function About() {
   return (
@@ -6,12 +7,7 @@ export default function About() {
       <div className="about-grid">
         <div className="about-left">
           <h2 className="reveal">Software that's useful, not just impressive.</h2>
-          <figure className="about-visual reveal">
-            <div className="about-visual-frame">
-              <img src={lukeCutout} alt="Luke Moffat" />
-            </div>
-            <figcaption className="about-visual-cap">Building in Sandbox, BYU-Idaho</figcaption>
-          </figure>
+          <GithubHeatmap />
         </div>
         <div className="about-body">
           <p className="reveal">
@@ -25,8 +21,11 @@ export default function About() {
             just something I use. It's something I build with and build for.
           </p>
           <p className="reveal">
-            I'm part of Sandbox, BYU-Idaho's startup accelerator, and I'm always looking
-            for problems worth solving.
+            I'm part of{' '}
+            <PreviewLink href="https://web.sandbox.ing/" label="Sandbox" sub="Student startup accelerator">
+              Sandbox
+            </PreviewLink>
+            , BYU-Idaho's startup accelerator, and I'm always looking for problems worth solving.
           </p>
         </div>
       </div>
