@@ -20,6 +20,7 @@ const PROJECTS = [
       'Browser-based CRM with a sales pipeline, transaction ledger, and live summary dashboard, synced to Google Firestore.',
     technologies: ['Flask', 'Python', 'Firestore'],
     url: 'https://github.com/moffatluke/finance-dashboard',
+    demo: 'https://finance-dashboard-demo-weld.vercel.app/dashboard.html',
   },
   {
     title: 'Obsidian Dev Tracker',
@@ -39,14 +40,14 @@ const PROJECTS = [
 
 function ProjectCard({ project }) {
   return (
-    <a
-      className={`project-card reveal${project.featured ? ' featured' : ''}`}
-      href={project.url}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <article className={`project-card reveal${project.featured ? ' featured' : ''}`}>
       <div className="project-card-head">
-        <h3>{project.title}</h3>
+        <h3>
+          {/* Stretched link: covers the whole card so a click anywhere opens the repo. */}
+          <a className="project-card-link" href={project.url} target="_blank" rel="noopener noreferrer">
+            {project.title}
+          </a>
+        </h3>
         <span className="project-card-arrow" aria-hidden="true">↗</span>
       </div>
       <p>{project.description}</p>
@@ -55,7 +56,12 @@ function ProjectCard({ project }) {
           <li key={tech}>{tech}</li>
         ))}
       </ul>
-    </a>
+      {project.demo && (
+        <a className="project-card-demo" href={project.demo} target="_blank" rel="noopener noreferrer">
+          Live demo <span aria-hidden="true">↗</span>
+        </a>
+      )}
+    </article>
   )
 }
 
