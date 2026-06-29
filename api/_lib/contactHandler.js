@@ -26,7 +26,7 @@ export async function handleContact({ name, email, message, ip }) {
   if (!check.ok) return { status: 400, body: { error: check.error } }
 
   const supabase = serverClient()
-  const decision = await checkAndRecord(supabase, ip, LIMITS)
+  const decision = await checkAndRecord(supabase, ip, LIMITS, 'contact')
   if (!decision.allowed) {
     return { status: 429, body: { error: "You've sent a few messages already — please try again later." } }
   }

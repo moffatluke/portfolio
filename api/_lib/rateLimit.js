@@ -3,9 +3,11 @@ import { createHmac } from 'node:crypto'
 // One-way hash of an IP so we never store the raw address. Keyed (HMAC) with a
 // server-side secret so the hashes can't be reversed with a lookup table of all
 // IPs. Same IP always maps to the same hash, so rate limiting still works.
-export function hashIp(ip) {
+// `scope` namespaces the hash per endpoint so separate budgets (chat vs contact)
+// don't count against each other while sharing one rate_limits table.
+export function hashIp(ip, scope = 'global') {
   const pepper = process.env.SUPABASE_SERVICE_ROLE_KEY || 'local-dev-pepper'
-  return createHmac('sha256', pepper).update(String(ip)).digest('hex')
+  return createHmac('sha256', pepper).update(`${scope}:${String(ip)}`).digest('hex')
 }
 
 // Pure decision: is this request allowed given recent counts?
@@ -16,8 +18,8 @@ export function evaluateLimit({ minuteCount, dayCount }, { perMinute, perDay }) 
 }
 
 // Counts this IP's recent requests, evaluates, and records when allowed.
-export async function checkAndRecord(supabase, ip, { perMinute, perDay }) {
-  const ipHash = hashIp(ip)
+export async function checkAndRecord(supabase, ip, { perMinute, perDay }, scope = 'global') {
+  const ipHash = hashIp(ip, scope)
   const now = Date.now()
   const minuteAgo = new Date(now - 60_000).toISOString()
   const dayAgo = new Date(now - 86_400_000).toISOString()

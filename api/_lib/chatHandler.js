@@ -20,7 +20,7 @@ export async function handleChat({ message, history, ip }) {
 
   const supabase = serverClient()
 
-  const decision = await checkAndRecord(supabase, ip || 'unknown', LIMITS)
+  const decision = await checkAndRecord(supabase, ip || 'unknown', LIMITS, 'chat')
   if (!decision.allowed) {
     return {
       status: 429,
