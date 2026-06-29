@@ -340,11 +340,25 @@ a.gh-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px;
 /* ── Projects ───────────────────────────── */
 .projects-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
 .project-card {
+  position: relative;
   display: flex; flex-direction: column; gap: 0.875rem; padding: 2rem;
   border: 1px solid var(--line); border-radius: 12px; background-color: var(--bg-raised);
   text-decoration: none; box-shadow: 0 1px 3px oklch(30% 0.05 var(--accent-h) / 0.06);
   transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
 }
+/* Stretched link: the title is the real link, its ::after covers the card. */
+.project-card-link { color: inherit; text-decoration: none; }
+.project-card-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.project-card:focus-within { border-color: var(--accent); }
+/* Secondary link (live demo) sits above the stretched ::after so it stays clickable. */
+.project-card-demo {
+  position: relative; z-index: 1; align-self: flex-start; margin-top: 0.1rem;
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: var(--text-sm); font-weight: 600; color: var(--link-ink);
+  text-decoration: none;
+}
+.project-card-demo:hover { text-decoration: underline; text-underline-offset: 3px; }
+.project-card.featured .project-card-demo { color: var(--accent-ink); }
 .project-card:hover { border-color: var(--accent); box-shadow: 0 6px 20px oklch(30% 0.08 var(--accent-h) / 0.12); transform: translateY(-4px); }
 .project-card.featured {
   grid-column: 1 / -1; padding: 2.5rem;
