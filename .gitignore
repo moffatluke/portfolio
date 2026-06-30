@@ -32,3 +32,6 @@ env
 docs/superpowers/
 PRODUCT.md
 INTEGRATION-COMPLETE.md
+
+.vercel
+.env*
