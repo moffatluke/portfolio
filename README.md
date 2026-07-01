@@ -1,33 +1,56 @@
 # Luke Moffat — AI Portfolio
 
-A personal portfolio site with a retrieval-augmented "chat with AI Luke" assistant. Visitors can ask questions about my background, skills, and projects and get answers grounded in a real knowledge base instead of made-up ones. The assistant embeds each question, finds the most relevant facts with a vector search, and feeds them to a language model to write the reply.
+**Live site → [moffatluke.com](https://moffatluke.com)**
 
-Built with React, Vite, Vercel serverless functions, Google Gemini, and Supabase pgvector.
+A personal portfolio site with a "chat with AI Luke" assistant. Visitors ask questions about my background, skills, and projects and get answers grounded in a real knowledge base. The assistant embeds each question, finds the most relevant facts with a pgvector similarity search, and feeds them to a language model to write the reply — no hallucinated answers, no made-up facts.
+
+Built with **React + Vite**, **Vercel serverless functions**, **Google Gemini** (embeddings + generation), and **Supabase pgvector**.
+
+---
+
+<div align="center">
+
+| Hero | Projects |
+|:---:|:---:|
+| ![Hero section](assets/screenshot-hero.png) | ![Projects grid](assets/screenshot-projects.png) |
+
+| AI Chat panel |
+|:---:|
+| ![AI chat](assets/screenshot-chat.png) |
+
+</div>
+
+---
+
+## Overview
+
+The site is a React single-page portfolio (hero, about, skills, projects, contact) with an AI chat panel wired to a full **RAG** (retrieval-augmented generation) pipeline:
+
+```
+question ─► embed (Gemini) ─► cosine search (pgvector) ─► top chunks ─► prompt + Gemini ─► grounded answer
+```
+
+The rotating GIF below shows the knowledge base itself — every fact stored as a 768-dimensional vector, projected to 3D. Chunks about the same topic cluster together, and that proximity is exactly what drives retrieval.
 
 <div align="center">
 
 ![Rotating 3D point cloud of the knowledge-base embeddings](assets/embeddings-3d.gif)
 
-*The knowledge base, visualized — every fact is stored as a 768-dimensional vector. Projected down to 3D, chunks about the same topic cluster together. This is the same proximity the chat's retrieval step relies on.*
-
 </div>
-
-## Overview
-
-The site is a normal React single-page portfolio (hero, about, projects, contact) with an AI chat panel at the bottom. When a visitor asks a question, the request goes to a Vercel serverless function that runs a full RAG (retrieval-augmented generation) pipeline:
-
-```
-question ─► embed ─► vector search (pgvector) ─► top matches ─► prompt + Gemini ─► grounded answer
-```
 
 ### Features
 
-* **RAG chat** — answers are grounded in a markdown knowledge base, not hallucinated; if the answer isn't in the context, the bot says so and points to the contact form
-* **Vector search** — chunks are stored as 768-dim embeddings in Supabase and retrieved by cosine similarity using a pgvector HNSW index
-* **Markdown answers** — the chat renders the model's Markdown (lists, bold, links) instead of showing raw text
-* **Rate limiting** — per-IP limits (8/min, 40/day) stored in Postgres keep the free tiers free
+* **RAG chat** — answers grounded in a markdown knowledge base; if the answer isn't in context, the bot says so and directs users to the contact form
+* **Vector search** — chunks stored as 768-dim embeddings in Supabase, retrieved by cosine similarity via a pgvector HNSW index
+* **Markdown answers** — replies render lists, bold text, and links instead of raw strings
+* **Scoped rate limiting** — per-IP limits (8/min, 40/day) stored in Postgres; chat and contact endpoints use disjoint hash keyspaces so they can't interfere
 * **Resilient generation** — transient Gemini errors are retried and fall back to a lighter model under load
-* **Embedding visualization** — a reproducible script renders the knowledge base as the rotating 3D GIF above
+* **Contact form** — validated, stored in Supabase, and delivered by Resend; client-side and server-side validation both run
+* **Security** — IP hashed with HMAC-SHA256 (never stored raw), security headers on every route, secrets kept server-side only
+* **Privacy-friendly analytics** — Vercel Web Analytics + Speed Insights (cookieless, no consent banner needed)
+* **Embedding visualization** — a reproducible script renders the knowledge base as a rotating 3D GIF
+
+---
 
 ## Instructions for Build and Use
 
@@ -38,11 +61,11 @@ Steps to build and/or run the software:
    git clone https://github.com/moffatluke/portfolio.git
    cd portfolio
    ```
-2. Install the dependencies
+2. Install dependencies
    ```bash
    npm install
    ```
-3. Create a `.env.local` file in the project root with your keys
+3. Create `.env.local` in the project root
    ```
    GEMINI_API_KEY=your_key_here
    SUPABASE_URL=your_project_url
@@ -50,7 +73,7 @@ Steps to build and/or run the software:
    RESEND_API_KEY=your_resend_key
    CONTACT_TO_EMAIL=you@example.com
    ```
-4. Create the database tables — run `supabase/schema.sql` in the Supabase SQL editor
+4. Apply the database schema — run `supabase/schema.sql` in the Supabase SQL editor
 5. Embed the knowledge base, then start the dev server
    ```bash
    node --env-file=.env.local scripts/ingest.mjs
@@ -59,30 +82,48 @@ Steps to build and/or run the software:
 
 Instructions for using the software:
 
-1. Open the local URL Vite prints (e.g. **http://localhost:5173/**)
+1. Open the local URL Vite prints (e.g. `http://localhost:5173/`)
 2. Scroll to the **Ask my AI** panel at the bottom of the page
-3. Type a question about my background, skills, or projects — or click a suggested question
+3. Type a question about my background, skills, or projects — or tap a suggested question
 4. To change what the AI knows, edit the markdown files in `knowledge/` and re-run the ingest script
+5. The contact form (Send a message button) is fully wired — submissions are stored in Supabase and emailed via Resend
+
+---
 
 ## Interesting Code
 
 ### Contextual chunk headers — making retrieval actually work
 
-Each knowledge chunk is prefixed with its document title and section before it gets embedded. Without this, a chunk describing a single project never contains the word "project" or its own name, so it scores poorly against a question like "list his projects." The header injects that topical context into the vector.
+Each knowledge chunk is prefixed with its document title and section before embedding. Without this, a chunk describing a project never contains the word "project" or its own name, so it scores poorly against "list his projects." The header injects topical context directly into the vector.
 
 ```js
-// scripts/lib/chunk.mjs — "<Doc Title> — <Section>" prefixed onto each chunk
+// scripts/lib/chunk.mjs
 const headerFor = (section) => {
   const parts = []
   if (docTitle) parts.push(docTitle)
   if (section && section !== 'intro' && section !== docTitle) parts.push(section)
   return parts.join(' — ')
 }
+// stored as: "Projects — Startup Idea Validator\n\nBuilt a Django…"
+```
+
+### Scoped rate limiting — preventing keyspace collisions between endpoints
+
+Chat and contact each call `checkAndRecord`, but they need separate rate-limit buckets. Rather than adding a column to the database, the endpoint scope is folded into the HMAC hash itself — so the same IP produces a completely different hash per endpoint. No schema change, no extra query.
+
+```js
+// api/_lib/rateLimit.js
+export function hashIp(ip, scope = 'global') {
+  const pepper = process.env.SUPABASE_SERVICE_ROLE_KEY || 'local-dev-pepper'
+  return createHmac('sha256', pepper).update(`${scope}:${String(ip)}`).digest('hex')
+}
+// chat endpoint:    hashIp(ip, 'chat')    → 3f8a…
+// contact endpoint: hashIp(ip, 'contact') → b91c…  (disjoint keyspace)
 ```
 
 ### Vector search — finding the nearest chunks in SQL
 
-Retrieval is a single Postgres function. The `<=>` operator is pgvector's cosine distance; ordering by it and limiting returns the most similar chunks.
+Retrieval is a single Postgres function. The `<=>` operator is pgvector's cosine distance; ordering by it and limiting to 5 returns the most semantically similar chunks to the visitor's question.
 
 ```sql
 -- supabase/schema.sql
@@ -96,9 +137,9 @@ language sql stable as $$
 $$;
 ```
 
-### Grounding the model — answer only from context
+### Grounding the model — answers only from retrieved context
 
-The system prompt stuffs the retrieved chunks in and instructs the model to stay inside them, which is what stops it from inventing facts.
+The system prompt stuffs the retrieved chunks in and explicitly prohibits inventing facts. This is the core of RAG: the retrieval step finds what's relevant, and the generation step is constrained to stay inside it.
 
 ```js
 // api/_lib/prompt.js
@@ -107,20 +148,26 @@ The system prompt stuffs the retrieved chunks in and instructs the model to stay
   and suggest using the "Send a message" button on the site.
 ```
 
+---
+
 ## Development Environment
 
 To recreate the development environment, you need the following software and/or libraries with the specified versions:
 
 * Node.js v18+
 * React 19 and Vite 7
-* `@google/generative-ai` 0.24 — Gemini embeddings (`gemini-embedding-001`, 768-dim) and generation (`gemini-2.5-flash`)
+* `@google/generative-ai` 0.24 — embeddings (`gemini-embedding-001`, 768-dim) + generation (`gemini-2.5-flash`)
 * `@supabase/supabase-js` 2.x — Postgres + pgvector client
-* Supabase project with the `vector` extension enabled
+* Supabase project with the `vector` extension enabled (free tier works)
 * `resend` 6.x — transactional email for the contact form
-* `react-markdown` 10.x — renders the chat replies
+* `react-markdown` 10.x — renders chat replies
+* `@vercel/analytics` + `@vercel/speed-insights` — privacy-friendly analytics
 * Vitest 4.x — unit tests
-* A free [Google AI Studio](https://aistudio.google.com/) API key
+* A free [Google AI Studio](https://aistudio.google.com/) API key (create a fresh project for the free quota)
+* Vercel CLI — `npm i -g vercel` — for local serverless function dev and deployment
 * Editor: Visual Studio Code
+
+---
 
 ## Useful Websites to Learn More
 
@@ -129,18 +176,20 @@ I found these websites useful in developing this software:
 * [Google Gemini API docs](https://ai.google.dev/gemini-api/docs)
 * [Supabase pgvector / AI & Vectors docs](https://supabase.com/docs/guides/ai)
 * [pgvector (GitHub)](https://github.com/pgvector/pgvector)
+* [What is Retrieval-Augmented Generation? (AWS)](https://aws.amazon.com/what-is/retrieval-augmented-generation/)
 * [Vercel Functions docs](https://vercel.com/docs/functions)
 * [Vite Guide](https://vite.dev/guide/)
 * [Resend docs](https://resend.com/docs)
-* [What is Retrieval-Augmented Generation? (AWS)](https://aws.amazon.com/what-is/retrieval-augmented-generation/)
+
+---
 
 ## Future Work
 
 The following items I plan to fix, improve, and/or add to this project in the future:
 
-* [ ] Deploy the site to a public host on Vercel
-* [ ] Wire the contact form to the `/api/contact` function (Resend email + Supabase)
+* [x] Deploy the site to a public host on Vercel — live at [moffatluke.com](https://moffatluke.com)
+* [x] Wire the contact form to the `/api/contact` function (Resend email + Supabase storage)
 * [ ] Stream the chat responses with a typing effect instead of waiting for the full answer
-* [ ] Add an interactive (rotatable) version of the embedding map as a page on the live site
-* [ ] Remember the conversation across page reloads
-* [ ] Expand the knowledge base and add hybrid keyword + vector search
+* [ ] Add an interactive (rotatable) version of the embedding map as a live page section
+* [ ] Remember the conversation across page reloads (localStorage + session context window)
+* [ ] Expand the knowledge base and add hybrid keyword + vector search (BM25 + pgvector RRF)
