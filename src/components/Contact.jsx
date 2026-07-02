@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import AiChat from './AiChat'
 import ContactModal from './ContactModal'
+import NeuralGraphBg from './NeuralGraphBg'
 
 export default function Contact() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -25,7 +26,10 @@ export default function Contact() {
           </div>
         </div>
 
-        <AiChat />
+        <div className="ai-chat-stage">
+          <NeuralGraphBg nodeCount={100} distance={80} intensity={1.3} />
+          <AiChat />
+        </div>
       </div>
 
       <ContactModal open={modalOpen} onClose={() => setModalOpen(false)} />
