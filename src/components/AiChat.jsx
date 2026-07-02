@@ -20,6 +20,7 @@ export default function AiChat() {
     const q = question.trim()
     if (busy || !q) return
     setBusy(true)
+    window.dispatchEvent(new Event('ai-graph-pulse'))
     setInput('')
     setShowSuggest(false)
     const history = messages.map((m) => ({

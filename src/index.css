@@ -420,7 +420,18 @@ a.gh-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px;
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: clamp(2.5rem, 6vw, 5.5rem); align-items: center;
 }
-.contact-layout .contact { max-width: 520px; }
+.contact-layout .contact { position: relative; z-index: 2; max-width: 520px; }
+
+.ai-chat-stage { position: relative; z-index: 1; width: 100%; }
+.neural-graph-bg {
+  position: absolute;
+  top: -15%; bottom: 5%;
+  left: -44%; right: 36%;
+  z-index: 0; pointer-events: none;
+  -webkit-mask: radial-gradient(68% 68% at 50% 50%, #000 46%, transparent 88%);
+          mask: radial-gradient(68% 68% at 50% 50%, #000 46%, transparent 88%);
+}
+.ai-chat-stage .ai-chat { position: relative; z-index: 1; }
 
 .ai-chat {
   display: flex; flex-direction: column;
@@ -503,6 +514,13 @@ a.gh-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px;
   .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
   .contact-layout .contact { max-width: none; }
   .ai-chat { min-height: 380px; }
+
+  .neural-graph-bg {
+    top: -34%; bottom: 58%;
+    left: -14%; right: -14%;
+    -webkit-mask: radial-gradient(72% 72% at 50% 54%, #000 44%, transparent 88%);
+            mask: radial-gradient(72% 72% at 50% 54%, #000 44%, transparent 88%);
+  }
 }
 
 /* ── Contact modal ──────────────────────── */
