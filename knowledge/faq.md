@@ -13,6 +13,9 @@ also has a strong SQL and database background.
 Luke studies Computer Science at BYU-Idaho and is part of Sandbox, the
 university's startup accelerator.
 
+## What year is Luke in school?
+Luke is currently a junior at BYU-Idaho, studying Computer Science.
+
 ## How can I contact Luke?
 Use the "Send a message" button on this site. You can also find him on GitHub at
 github.com/moffatluke and on LinkedIn.
