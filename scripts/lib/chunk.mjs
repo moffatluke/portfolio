@@ -7,7 +7,11 @@
 // header injects that topical context into both the embedding and the text the
 // model sees. (This is the standard "contextual chunk header" RAG technique.)
 export function chunkMarkdown(markdown, source, { maxChars = 800 } = {}) {
-  const lines = markdown.split('\n')
+  // Split on both LF and CRLF. A trailing "\r" would otherwise defeat the
+  // heading regex below (`.` doesn't match `\r`), collapsing every section
+  // header — which quietly wrecks the contextual chunk headers on Windows
+  // checkouts where git may rewrite these files to CRLF.
+  const lines = markdown.split(/\r?\n/)
   const sections = []
   let docTitle = ''
   let current = { section: 'intro', body: [] }
