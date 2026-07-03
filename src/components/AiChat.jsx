@@ -10,11 +10,20 @@ export default function AiChat() {
   const [busy, setBusy] = useState(false)
   const [showSuggest, setShowSuggest] = useState(true)
   const threadRef = useRef(null)
+  const inputRef = useRef(null)
 
   useEffect(() => {
     const el = threadRef.current
     if (el) el.scrollTop = el.scrollHeight
   }, [messages, busy])
+
+  // Auto-grow the textarea with its content, up to a max height (then it scrolls).
+  useEffect(() => {
+    const el = inputRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${Math.min(el.scrollHeight, 132)}px`
+  }, [input])
 
   const ask = async (question) => {
     const q = question.trim()
@@ -47,6 +56,14 @@ export default function AiChat() {
   const onSubmit = (e) => {
     e.preventDefault()
     ask(input)
+  }
+
+  const onKeyDown = (e) => {
+    // Enter sends; Shift+Enter inserts a newline for longer, multi-line questions.
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      ask(input)
+    }
   }
 
   return (
@@ -93,10 +110,12 @@ export default function AiChat() {
       )}
 
       <form className="ai-chat-input" onSubmit={onSubmit}>
-        <input
-          type="text"
+        <textarea
+          ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={onKeyDown}
+          rows={1}
           autoComplete="off"
           placeholder="Ask about Luke…"
           aria-label="Ask Luke's AI a question"
