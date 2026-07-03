@@ -5,6 +5,8 @@ questions about Luke's background, skills, and projects and get answers written
 by an AI that is grounded in a real knowledge base of facts about him. If the
 answer isn't in that knowledge base, the assistant says so and points people to
 the contact form instead of making something up.
+Repo: https://github.com/moffatluke/portfolio
+Live site: https://moffatluke.com
 
 ## How the AI answers questions (RAG)
 The assistant uses retrieval-augmented generation (RAG). When someone asks a

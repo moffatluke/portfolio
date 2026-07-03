@@ -13,25 +13,31 @@ risks, and a clear go/no-go verdict. Input validation with gibberish detection
 keeps the model honest, and analyses persist to a browsable history. Built with
 Django, Python, the NVIDIA LLM API, and SQLite. This is one of Luke's featured
 projects.
+Repo: https://github.com/moffatluke/startup-idea-validator
 
 ## Cowork Student Toolkit
 An MCP server that connects Claude directly to Canvas LMS. Students can ask what
 assignments are due, what they're missing, or what their grades are, with no
 app-hopping. Built with MCP, Node.js, and the Canvas API.
+Repo: https://github.com/moffatluke/cowork-student-toolkit
 
 ## Finance Dashboard
 A browser-based CRM with a sales pipeline, transaction ledger, and live summary
 dashboard, synced to Google Firestore. Built with Flask, Python, and Firestore.
+Repo: https://github.com/moffatluke/finance-dashboard
+Live demo: https://finance-dashboard-demo-weld.vercel.app/dashboard.html
 
 ## Obsidian Dev Tracker
 A custom Obsidian plugin that renders GitHub contribution and Claude Code session
 heatmaps in the sidebar. Built with TypeScript, the Obsidian API, and the GitHub
 API.
+Repo: https://github.com/moffatluke/obsidian-dev-tracker
 
 ## Note Taker
 A polished command-line note app with arrow-key navigation, type-to-search, tag
 filtering, and local JSON storage. Built with TypeScript, Node.js, and a CLI
 interface.
+Repo: https://github.com/moffatluke/note-taker
 
 ## This Portfolio Site (Ask My AI)
 Luke's portfolio site at moffatluke.com, including the "Ask my AI" assistant that
@@ -41,3 +47,5 @@ similarity search, and answered by a language model using only the retrieved
 facts. Built with React, Vite, and Vercel serverless functions, Google Gemini for
 embeddings and answers, and Supabase Postgres with the pgvector extension as the
 vector database.
+Repo: https://github.com/moffatluke/portfolio
+Live site: https://moffatluke.com
