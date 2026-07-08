@@ -17,12 +17,19 @@ export default function AiChat() {
     if (el) el.scrollTop = el.scrollHeight
   }, [messages, busy])
 
-  // Auto-grow the textarea with its content, up to a max height (then it scrolls).
+  // Auto-grow the textarea with its content up to a max height (~4 lines), then
+  // scroll. scrollHeight excludes the border, so with box-sizing: border-box we
+  // add it back — otherwise the box is 2px short and a scrollbar flashes on
+  // every line. The scrollbar only turns on once the content exceeds the cap.
   useEffect(() => {
     const el = inputRef.current
     if (!el) return
+    const MAX = 132
     el.style.height = 'auto'
-    el.style.height = `${Math.min(el.scrollHeight, 132)}px`
+    const border = el.offsetHeight - el.clientHeight // top + bottom border
+    const full = el.scrollHeight + border
+    el.style.height = `${Math.min(full, MAX)}px`
+    el.style.overflowY = full > MAX ? 'auto' : 'hidden'
   }, [input])
 
   const ask = async (question) => {
